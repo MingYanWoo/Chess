@@ -12,6 +12,7 @@ void Board::paintEvent(QPaintEvent *)
     int d = 40;
     for(int i = 1; i <= 10; ++i)
     {
+        painter.setPen(QColor(255, 1, 0));
         painter.drawLine(QPoint(d, i*d), QPoint(9*d, i*d));
     }
 }
