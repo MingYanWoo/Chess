@@ -32,7 +32,7 @@
 #define __DECIMAL_DIG__ __LDBL_DECIMAL_DIG__
 #define __DEPRECATED 1
 #define __DYNAMIC__ 1
-#define __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ 101000
+#define __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ 101300
 #define __EXCEPTIONS 1
 #define __FINITE_MATH_ONLY__ 0
 #define __FLT_DECIMAL_DIG__ 9
@@ -205,6 +205,7 @@
 #define __SSE2_MATH__ 1
 #define __SSE2__ 1
 #define __SSE3__ 1
+#define __SSE4_1__ 1
 #define __SSE_MATH__ 1
 #define __SSE__ 1
 #define __SSP__ 1

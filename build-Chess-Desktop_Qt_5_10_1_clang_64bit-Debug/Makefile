@@ -13,8 +13,8 @@ MAKEFILE      = Makefile
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
-CFLAGS        = -pipe -g $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.10 -Wall -W -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.10 -Wall -W -fPIC $(DEFINES)
+CFLAGS        = -pipe -g $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.13 -Wall -W -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.13 -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I../Chess -I. -I../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers -I../../../Qt5.10.1/5.10.1/clang_64/lib/QtGui.framework/Headers -I../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/AGL.framework/Headers -I../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clang -F/Users/MingYan/Qt5.10.1/5.10.1/clang_64/lib
 QMAKE         = /Users/MingYan/Qt5.10.1/5.10.1/clang_64/bin/qmake
 DEL_FILE      = rm -f
@@ -37,7 +37,7 @@ COMPRESS      = gzip -9f
 DISTNAME      = Chess1.0.0
 DISTDIR = /Users/MingYan/Git/Chess/build-Chess-Desktop_Qt_5_10_1_clang_64bit-Debug/.tmp/Chess1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.10 -Wl,-rpath,@executable_path/Frameworks -Wl,-rpath,/Users/MingYan/Qt5.10.1/5.10.1/clang_64/lib
+LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.13 -Wl,-rpath,@executable_path/Frameworks -Wl,-rpath,/Users/MingYan/Qt5.10.1/5.10.1/clang_64/lib
 LIBS          = $(SUBLIBS) -F/Users/MingYan/Qt5.10.1/5.10.1/clang_64/lib -framework QtWidgets -framework QtGui -framework QtCore -framework DiskArbitration -framework IOKit -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
@@ -51,9 +51,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Chess/Board.cpp \
-		../Chess/main.cpp moc_Board.cpp
+		../Chess/main.cpp \
+		../Chess/Stone.cpp moc_Board.cpp
 OBJECTS       = Board.o \
 		main.o \
+		Stone.o \
 		moc_Board.o
 DIST          = ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/qdevice.pri \
@@ -241,8 +243,10 @@ DIST          = ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_pre.prf 
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/exceptions.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/yacc.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/lex.prf \
-		../Chess/Chess.pro ../Chess/Board.h ../Chess/Board.cpp \
-		../Chess/main.cpp
+		../Chess/Chess.pro ../Chess/Board.h \
+		../Chess/Stone.h ../Chess/Board.cpp \
+		../Chess/main.cpp \
+		../Chess/Stone.cpp
 QMAKE_TARGET  = Chess
 DESTDIR       = 
 TARGET        = Chess.app/Contents/MacOS/Chess
@@ -657,7 +661,7 @@ Chess.app/Contents/Resources/empty.lproj:
 Chess.app/Contents/Info.plist: 
 	@test -d Chess.app/Contents || mkdir -p Chess.app/Contents
 	@$(DEL_FILE) Chess.app/Contents/Info.plist
-	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,\$${QMAKE_SHORT_VERSION},1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,\$${QMAKE_FULL_VERSION},1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" -e "s,@BUNDLEIDENTIFIER@,Ming.Chess,g" -e "s,\$${PRODUCT_BUNDLE_IDENTIFIER},Ming.Chess,g" -e "s,\$${MACOSX_DEPLOYMENT_TARGET},10.10,g" -e "s,\$${IPHONEOS_DEPLOYMENT_TARGET},,g" -e "s,\$${TVOS_DEPLOYMENT_TARGET},,g" -e "s,\$${WATCHOS_DEPLOYMENT_TARGET},,g" -e "s,@ICON@,,g" -e "s,\$${ASSETCATALOG_COMPILER_APPICON_NAME},,g" -e "s,@EXECUTABLE@,Chess,g" -e "s,@LIBRARY@,Chess,g" -e "s,\$${EXECUTABLE_NAME},Chess,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clang/Info.plist.app >Chess.app/Contents/Info.plist
+	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,\$${QMAKE_SHORT_VERSION},1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,\$${QMAKE_FULL_VERSION},1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" -e "s,@BUNDLEIDENTIFIER@,Ming.Chess,g" -e "s,\$${PRODUCT_BUNDLE_IDENTIFIER},Ming.Chess,g" -e "s,\$${MACOSX_DEPLOYMENT_TARGET},10.13,g" -e "s,\$${IPHONEOS_DEPLOYMENT_TARGET},,g" -e "s,\$${TVOS_DEPLOYMENT_TARGET},,g" -e "s,\$${WATCHOS_DEPLOYMENT_TARGET},,g" -e "s,@ICON@,,g" -e "s,\$${ASSETCATALOG_COMPILER_APPICON_NAME},,g" -e "s,@EXECUTABLE@,Chess,g" -e "s,@LIBRARY@,Chess,g" -e "s,\$${EXECUTABLE_NAME},Chess,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clang/Info.plist.app >Chess.app/Contents/Info.plist
 
 all: Makefile \
 		Chess.app/Contents/PkgInfo \
@@ -671,8 +675,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Chess/Board.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Chess/Board.cpp ../Chess/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Chess/Board.h ../Chess/Stone.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Chess/Board.cpp ../Chess/main.cpp ../Chess/Stone.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -702,13 +706,16 @@ compiler_moc_predefs_make_all: moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) moc_predefs.h
 moc_predefs.h: ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/data/dummy.cpp
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.10 -Wall -W -dM -E -o moc_predefs.h ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/data/dummy.cpp
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++11 $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk -mmacosx-version-min=10.13 -Wall -W -dM -E -o moc_predefs.h ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/data/dummy.cpp
 
 compiler_moc_header_make_all: moc_Board.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_Board.cpp
 moc_Board.cpp: ../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		../Chess/Board.h \
 		moc_predefs.h \
 		../../../Qt5.10.1/5.10.1/clang_64/bin/moc
@@ -735,6 +742,9 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 Board.o: ../Chess/Board.cpp ../Chess/Board.h \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtGui.framework/Headers/QPainter \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtGui.framework/Headers/qpainter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Board.o ../Chess/Board.cpp
@@ -743,8 +753,16 @@ main.o: ../Chess/main.cpp ../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framew
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		../Chess/Board.h \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Chess/main.cpp
+
+Stone.o: ../Chess/Stone.cpp ../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Stone.o ../Chess/Stone.cpp
 
 moc_Board.o: moc_Board.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Board.o moc_Board.cpp

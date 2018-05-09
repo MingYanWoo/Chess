@@ -51,9 +51,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../Chess/Board.cpp \
-		../Chess/main.cpp moc_Board.cpp
+		../Chess/main.cpp \
+		../Chess/Stone.cpp moc_Board.cpp
 OBJECTS       = Board.o \
 		main.o \
+		Stone.o \
 		moc_Board.o
 DIST          = ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_pre.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/qdevice.pri \
@@ -213,6 +215,7 @@ DIST          = ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_pre.prf 
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/qt_config.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_post.prf \
+		../Chess/.qmake.stash \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/mac/sdk.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/toolchain.prf \
@@ -239,8 +242,10 @@ DIST          = ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_pre.prf 
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/exceptions.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/yacc.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/lex.prf \
-		../Chess/Chess.pro ../Chess/Board.h ../Chess/Board.cpp \
-		../Chess/main.cpp
+		../Chess/Chess.pro ../Chess/Board.h \
+		../Chess/Stone.h ../Chess/Board.cpp \
+		../Chess/main.cpp \
+		../Chess/Stone.cpp
 QMAKE_TARGET  = Chess
 DESTDIR       = 
 TARGET        = Chess.app/Contents/MacOS/Chess
@@ -416,6 +421,7 @@ Makefile: ../Chess/Chess.pro ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clan
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/qt_config.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/mac/sdk.prf \
 		../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/toolchain.prf \
@@ -605,6 +611,7 @@ Makefile: ../Chess/Chess.pro ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clan
 ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/qt_config.prf:
 ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/mac/sdk.prf:
 ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/toolchain.prf:
@@ -665,8 +672,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../../../Qt5.10.1/5.10.1/clang_64/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../Chess/Board.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Chess/Board.cpp ../Chess/main.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Chess/Board.h ../Chess/Stone.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Chess/Board.cpp ../Chess/main.cpp ../Chess/Stone.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -676,6 +683,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r Chess.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -702,6 +710,9 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_Board.cpp
 moc_Board.cpp: ../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		../Chess/Board.h \
 		moc_predefs.h \
 		../../../Qt5.10.1/5.10.1/clang_64/bin/moc
@@ -728,6 +739,9 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean
 Board.o: ../Chess/Board.cpp ../Chess/Board.h \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtGui.framework/Headers/QPainter \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtGui.framework/Headers/qpainter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Board.o ../Chess/Board.cpp
@@ -736,8 +750,16 @@ main.o: ../Chess/main.cpp ../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framew
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		../Chess/Board.h \
 		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/QWidget \
-		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Chess/main.cpp
+
+Stone.o: ../Chess/Stone.cpp ../Chess/Stone.h \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/QString \
+		../../../Qt5.10.1/5.10.1/clang_64/lib/QtCore.framework/Headers/qstring.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Stone.o ../Chess/Stone.cpp
 
 moc_Board.o: moc_Board.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_Board.o moc_Board.cpp
